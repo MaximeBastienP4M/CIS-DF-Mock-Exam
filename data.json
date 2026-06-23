@@ -806,16 +806,6 @@
       "correctAnswer": "onBefore"
     },
     {
-      "question": "A Configuration Management Governance team is transitioning from utilizing legacy CMDB status fields to CSDM life cycle status fields. \n\nWhich table can be modified?",
-      "options": [
-        "Life Cycle Mapping [life_cycle_mapping]",
-        "Life Cycle Stages [life_cycle_stage]",
-        "Life Cycle Controls [life_cycle_control]",
-        "Life Cycle Stage Status [life_cycle_stage_status]"
-      ],
-      "correctAnswer": "Life Cycle Mapping [life_cycle_mapping]"
-    },
-    {
       "question": "In a company there is a need to understand the CSDM maturity level needed. Different stakeholders listed a number of use cases that they expect over time. \n\nWhich use case requires information objects?",
       "options": [
         "The Asset Management team wants to understand the asset life cycle compliancy in a Business Application context.",
