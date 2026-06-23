@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIS DF Mock-Exam</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h1>ServiceN<span>o</span>w <br> CIS Data Foundations</h1>
+            <h2>Mock-Exam</h2>
+
+            <div class="timer" id="timer">01:30:00</div>
+
+            <button id="startBtn" disabled>Start Exam</button>
+            <button id="pauseBtn" style="display:none;">Pause Exam</button>
+            <button id="submitBtn" style="display:none;">Submit Exam</button>
+            <button id="restartBtn" style="display:none;">Retake Exam</button>
+
+            <div id="score" class="score"></div>
+        </div>
+
+        <div class="content" id="content">
+            <div id="exam"></div>
+        </div>
+
+    </div>
+
+    <div id="pauseOverlay" class="pause-overlay">
+        <div class="pause-message">
+            The exam is paused.<br>
+            Resume to continue.
+        </div>
+    </div>
+
+    <script>
+        let allQuestions = [];
+        let questions = [];
+        let answers = {};
+        let timerInterval;
+        let remainingTime = 90 * 60;
+        let isPaused = false;
+        let examStarted = false;
+        let examSubmitted = false;
+
+        loadQuestions();
+
+        async function loadQuestions() {
+            try {
+                const response = await fetch("data.json");
+                const data = await response.json();
+                allQuestions = data.questions || [];
+
+                document.getElementById("startBtn").disabled = false;
+            } catch (error) {
+                console.error("Error loading questions:", error);
+                document.getElementById("score").innerText = "Could not load questions.";
+            }
+        }
+
+        document.getElementById("startBtn").addEventListener("click", function () {
+            answers = {};
+            document.getElementById("score").innerText = "";
+
+            let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+            questions = shuffled.slice(0, 75);
+
+            remainingTime = 90 * 60;
+            isPaused = false;
+            examStarted = true;
+            examSubmitted = false;
+
+            renderExam();
+            updateTimerDisplay();
+            startTimer();
+
+            this.style.display = "none";
+            document.getElementById("pauseBtn").style.display = "block";
+            document.getElementById("submitBtn").style.display = "block";
+            document.getElementById("restartBtn").style.display = "none";
+        });
+
+        function updateTimerDisplay() {
+            let h = Math.floor(remainingTime / 3600);
+            let m = Math.floor((remainingTime % 3600) / 60);
+            let s = remainingTime % 60;
+
+            document.getElementById("timer").innerText =
+                `${h.toString().padStart(2, '0')}:` +
+                `${m.toString().padStart(2, '0')}:` +
+                `${s.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                if (isPaused || examSubmitted) return;
+
+                updateTimerDisplay();
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                    return;
+                }
+
+                remainingTime--;
+            }, 1000);
+        }
+
+        function togglePause() {
+            if (!examStarted || examSubmitted) return;
+
+            isPaused = !isPaused;
+
+            const overlay = document.getElementById("pauseOverlay");
+            const btn = document.getElementById("pauseBtn");
+
+            if (isPaused) {
+                overlay.classList.add("show");
+                btn.innerText = "Resume Exam";
+            } else {
+                overlay.classList.remove("show");
+                btn.innerText = "Pause Exam";
+            }
+        }
+
+        function renderExam() {
+            const examDiv = document.getElementById("exam");
+            examDiv.innerHTML = "";
+
+            questions.forEach((q, i) => {
+                const div = document.createElement("div");
+                div.className = "question";
+
+                const p = document.createElement("p");
+                p.innerText = (i + 1) + ". " + q.question;
+                div.appendChild(p);
+
+                const multi = Array.isArray(q.correctAnswer);
+
+                if (multi) {
+                    const instruction = document.createElement("div");
+                    instruction.style.fontSize = "0.9em";
+                    instruction.style.marginBottom = "10px";
+                    instruction.style.fontWeight = "600";
+                    instruction.innerText = `Choose ${q.correctAnswer.length} options`;
+                    div.appendChild(instruction);
+                }
+
+                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+                shuffledOptions.forEach(opt => {
+                    const label = document.createElement("label");
+
+                    const input = document.createElement("input");
+                    input.type = multi ? "checkbox" : "radio";
+                    input.name = "q-" + i;
+                    input.value = opt;
+
+                    input.addEventListener("change", () => {
+                        if (isPaused || examSubmitted) {
+                            input.checked = !input.checked;
+                            return;
+                        }
+
+                        if (multi) {
+                            if (!answers[i]) answers[i] = [];
+
+                            if (input.checked) {
+                                if (!answers[i].includes(opt)) {
+                                    answers[i].push(opt);
+                                }
+                            } else {
+                                answers[i] = answers[i].filter(a => a !== opt);
+                            }
+                        } else {
+                            answers[i] = opt;
+                        }
+                    });
+
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(opt));
+                    div.appendChild(label);
+                });
+
+                examDiv.appendChild(div);
+            });
+        }
+
+        function isAnswerCorrect(userAnswer, correctAnswer) {
+            if (Array.isArray(correctAnswer)) {
+                if (!Array.isArray(userAnswer)) return false;
+
+                const userSorted = [...userAnswer].sort();
+                const correctSorted = [...correctAnswer].sort();
+
+                return userSorted.length === correctSorted.length &&
+                    userSorted.every((value, index) => value === correctSorted[index]);
+            }
+
+            return userAnswer === correctAnswer;
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+
+            const unanswered = questions.some((q, i) => {
+                return answers[i] === undefined ||
+                    (Array.isArray(q.correctAnswer) && (!answers[i] || answers[i].length === 0));
+            });
+
+            // ✅ Confirm popup with 2 choices
+            if (unanswered) {
+                const proceed = confirm(
+                    "You have unanswered questions.\n\nPress OK to submit anyway.\nPress Cancel to complete the exam."
+                );
+                if (!proceed) return;
+            }
+
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            document.getElementById("pauseOverlay").classList.remove("show");
+            isPaused = false;
+
+            let correct = 0;
+            const questionDivs = document.querySelectorAll(".question");
+
+            questions.forEach((q, i) => {
+                const questionDiv = questionDivs[i];
+                const labels = questionDiv.querySelectorAll("label");
+                const userAnswer = answers[i];
+                const correctAnswer = q.correctAnswer;
+
+                const questionIsCorrect = isAnswerCorrect(userAnswer, correctAnswer);
+
+                // ✅ Restore question coloring
+                if (questionIsCorrect) {
+                    correct++;
+                    questionDiv.classList.add("correct");
+                } else {
+                    questionDiv.classList.add("wrong");
+                }
+
+                labels.forEach(label => {
+                    const input = label.querySelector("input");
+                    const value = input.value;
+
+                    input.disabled = true;
+
+                    const isCorrectOption = Array.isArray(correctAnswer)
+                        ? correctAnswer.includes(value)
+                        : correctAnswer === value;
+
+                    // ✅ Restore answer coloring
+                    if (isCorrectOption) {
+                        label.classList.add("correct-answer");
+                    } else if (input.checked) {
+                        label.classList.add("wrong-answer");
+                    }
+                });
+            });
+
+            const percentage = (correct / questions.length) * 100;
+            const passed = percentage >= 70;
+            const resultText = passed ? "✅ PASS" : "❌ FAIL";
+
+            document.getElementById("score").innerText =
+                `Score: ${correct} / ${questions.length} (${percentage.toFixed(1)}%) - ${resultText}`;
+
+            document.getElementById("pauseBtn").style.display = "none";
+            document.getElementById("submitBtn").style.display = "none";
+            document.getElementById("restartBtn").style.display = "block";
+        }
+
+        document.getElementById("pauseBtn").addEventListener("click", togglePause);
+        document.getElementById("submitBtn").addEventListener("click", submitExam);
+        document.getElementById("restartBtn").addEventListener("click", () => location.reload());
+    </script>
+
+</body>
+
+</html>

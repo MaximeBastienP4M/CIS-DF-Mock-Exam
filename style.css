@@ -1,0 +1,154 @@
+
+body {
+    background: #d9d9d9;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    color: #013345;
+    font-family: "Quicksand", "Century Gothic", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 300px;
+    background: white;
+    padding: 20px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.content {
+    flex: 1;
+    overflow-y: scroll;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1,
+h2 {
+    text-align: left;
+}
+
+.question {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background: #c7c7c7;
+    transition: 0.2s ease;
+}
+
+.question.correct {
+    border: 2px solid #2e7d32;
+    background: #eaf7ea;
+}
+
+.question.wrong {
+    border: 2px solid #c62828;
+    background: #fdecec;
+}
+
+button {
+    width: 100%;
+    background: #013345;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: 0.2s;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+button:hover:not(:disabled) {
+    transform: scale(1.03);
+    background: #012634;
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.timer {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.score {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 300px;
+    width: calc(100% - 300px);
+    height: 100vh;
+    background: rgba(64, 64, 64, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 999;
+}
+
+.pause-overlay.show {
+    display: flex;
+}
+
+.pause-message {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+p {
+    line-height: 1.3;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+label.correct-answer {
+    color: #2e7d32;
+    font-weight: bold;
+    background: rgba(46, 125, 50, 0.08);
+}
+
+label.wrong-answer {
+    color: #c62828;
+    font-weight: bold;
+    background: rgba(198, 40, 40, 0.08);
+}
+
+span {
+    color: #78c255;
+}
+
+input {
+    accent-color: #013345;
+    margin-right: 8px;
+}
