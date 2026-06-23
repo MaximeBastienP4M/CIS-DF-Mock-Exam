@@ -1014,6 +1014,105 @@
         "CSDM Data Foundations Dashboard Playbooks"
       ],
       "correctAnswer": "CMDB Data Foundations Dashboard Playbooks"
+    },
+    {
+      "question": "A CMDB Architect intends to build a CMDB using CSDM guidance.\n\nWhich CMDB tables will the architect use to build the CSDM sell/consume domain?",
+      "options": [
+        "Business Service Offering, Business Service",
+        "Business Capability, Information Object, Business Application",
+        "Application Service, Technology Management Service (Technical Service), Technology Management Offering (Technical Service Offering)"
+      ],
+      "correctAnswer": "Business Service Offering, Business Service"
+    },
+    {
+      "question": "A CMDB Data Owner has requested better insights on the different data sources that make up the CMDB data set. The Platform Owner knows that the new Service Graph Connector Central plugin is just what is needed.\n\nAfter installing the plugin, what workspace will have the new Service Graph Connector Central tab available?",
+      "options": [
+        "Service Graph Connector Workspace",
+        "CMDB Workspace",
+        "Discovery Admin Workspace"
+      ],
+      "correctAnswer": "CMDB Workspace"
+    },
+    {
+      "question": "A Configuration Manager needs to enable a CMDB Data Manager policy to remove records from a CI Class while retaining the ability to restore them within a specified period.\n\nWhich policy type should the Configuration Manager create?",
+      "options": [
+        "Certification",
+        "Delete",
+        "Retire",
+        "Archive"
+      ],
+      "correctAnswer": "Archive"
+    },
+    {
+      "question": "A Business Relationship Manager in an organization wants to implement Service Portfolio Management (SPM) and to present offerings to business consumers.\n\nWhich CSDM Domain does this align with?",
+      "options": [
+        "Build and Integration (Build)",
+        "Service Consumption (Sell/Consume)",
+        "Design and Planning (Design)",
+        "Service Delivery"
+      ],
+      "correctAnswer": "Service Consumption (Sell/Consume)"
+    },
+    {
+      "question": "A Service Owner needs to view related items, such as Active Incidents and Planned Changes, directly on the home node of the Unified Map.\n\nWhich work area would allow the Service Owner to meet this goal?",
+      "options": [
+        "Tool box",
+        "Map",
+        "Contextual side panel",
+        "Content controls"
+      ],
+      "correctAnswer": "Contextual side panel"
+    },
+    {
+      "question": "A CMDB Administrator wants to leverage the CMDB Data Foundations Dashboard.\n\nWhat are benefits of using this application?",
+      "options": [
+        "Has a framework to create custom metrics for the CMDB",
+        "Checks that important data is valid and properly configured",
+        "Provides playbooks to assist in the remediation of potential risks",
+        "Uses automation to remediate potential risks"
+      ],
+      "correctAnswer": [
+        "Checks that important data is valid and properly configured",
+        "Provides playbooks to assist in the remediation of potential risks"
+      ]
+    },
+    {
+      "question": "A Configuration Manager wants to explore ServiceNow CMDB 360 saved queries to see if the reports can assist with managing of CMDB data.\n\nWhat insights are gained from CMDB 360 queries?",
+      "options": [
+        "Unique CIs created from different data sources",
+        "Gaps in attribute data from different data sources",
+        "Different attribute values from different data sources",
+        "Orphan CIs created from different data sources",
+        "Duplicate configuration items from different data sources"
+      ],
+      "correctAnswer": [
+        "Gaps in attribute data from different data sources",
+        "Different attribute values from different data sources"
+      ]
+    },
+    {
+      "question": "A Manager needs information on how to correctly establish relationships between Infrastructure CIs, Technology Management Offerings (Technical Service Offerings), and Application Services within the CMDB.\n\nWhich CSDM domain would provide this information?",
+      "options": [
+        "Build and Integration (Build)",
+        "Foundation",
+        "Design and Planning (Design)",
+        "Service Consumption (Sell / Consume)",
+        "Service Delivery (Manage Technical Services)"
+      ],
+      "correctAnswer": "Service Delivery (Manage Technical Services)"
+    },
+    {
+      "question": "An organization is updating the CMDB to include new asset types like IoT devices. Relevant CI classes need to be added and outdated ones need to be removed from the Principal Class filter to ensure accurate display in ITSM processes.\n\nWhich roles are needed to add or remove classes?",
+      "options": [
+        "cmdb_query_builder",
+        "personalize_dictionary",
+        "sn_csdm_admin",
+        "sn_cmdb_admin"
+      ],
+      "correctAnswer": [
+        "personalize_dictionary",
+        "sn_cmdb_admin"
+      ]
     }
   ]
 }
