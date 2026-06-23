@@ -1496,8 +1496,8 @@
       ],
       "correctAnswer": {
         "t1": "audit",
-        "t2": "orphan",
-        "t3": "required",
+        "t2": "required",
+        "t3": "orphan",
         "t4": "recommended",
         "t5": "stale",
         "t6": "duplicate"
