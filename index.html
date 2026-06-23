@@ -7,6 +7,133 @@
     <title>CIS DF Mock-Exam</title>
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Drag & drop additions */
+        .question-text {
+            white-space: pre-line;
+        }
+
+        .question-instruction {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .dragdrop-wrapper {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px;
+            align-items: start;
+            margin-top: 12px;
+        }
+
+        .dragdrop-bank-title,
+        .dragdrop-answer-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .dragdrop-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .drag-item {
+            border: 1px solid #8fd0d6;
+            background: #fff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+        }
+
+        .drop-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .drop-row {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .drop-zone {
+            min-height: 44px;
+            border: 2px dashed #8fd0d6;
+            border-radius: 6px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            box-sizing: border-box;
+        }
+
+        .drop-zone.filled {
+            border-style: solid;
+        }
+
+        .drop-zone.drag-over {
+            background: #f0fbfc;
+        }
+
+        .drop-zone-text {
+            flex: 1;
+        }
+
+        .drop-description {
+            line-height: 1.4;
+        }
+
+        .clear-drop-btn {
+            width: auto !important;
+            margin: 0 0 0 8px !important;
+            padding: 4px 8px !important;
+            border-radius: 4px !important;
+            font-size: 12px !important;
+            background: #888 !important;
+        }
+
+        .clear-drop-btn:hover {
+            background: #666 !important;
+        }
+
+        .drop-zone.correct-answer {
+            border-color: #2ecc71 !important;
+            background: #eafaf1 !important;
+        }
+
+        .drop-zone.wrong-answer {
+            border-color: #e74c3c !important;
+            background: #fdecea !important;
+        }
+
+        .correct-hint {
+            margin-top: 6px;
+            font-size: 0.85em;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .dragdrop-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .drop-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -56,8 +183,7 @@
             try {
                 const response = await fetch("data.json");
                 const data = await response.json();
-                allQuestions = data.questions || [];
-
+                allQuestions = Array.isArray(data) ? data : (data.questions || []);
                 document.getElementById("startBtn").disabled = false;
             } catch (error) {
                 console.error("Error loading questions:", error);
@@ -69,7 +195,7 @@
             answers = {};
             document.getElementById("score").innerText = "";
 
-            let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+            const shuffled = shuffleArray(allQuestions);
             questions = shuffled.slice(0, 75);
 
             remainingTime = 90 * 60;
@@ -87,10 +213,19 @@
             document.getElementById("restartBtn").style.display = "none";
         });
 
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
         function updateTimerDisplay() {
-            let h = Math.floor(remainingTime / 3600);
-            let m = Math.floor((remainingTime % 3600) / 60);
-            let s = remainingTime % 60;
+            const h = Math.floor(remainingTime / 3600);
+            const m = Math.floor((remainingTime % 3600) / 60);
+            const s = remainingTime % 60;
 
             document.getElementById("timer").innerText =
                 `${h.toString().padStart(2, '0')}:` +
@@ -140,60 +275,248 @@
             questions.forEach((q, i) => {
                 const div = document.createElement("div");
                 div.className = "question";
+                div.dataset.questionIndex = i;
 
-                const p = document.createElement("p");
-                p.innerText = (i + 1) + ". " + q.question;
-                div.appendChild(p);
-
-                const multi = Array.isArray(q.correctAnswer);
-
-                if (multi) {
-                    const instruction = document.createElement("div");
-                    instruction.style.fontSize = "0.9em";
-                    instruction.style.marginBottom = "10px";
-                    instruction.style.fontWeight = "600";
-                    instruction.innerText = `Choose ${q.correctAnswer.length} options`;
-                    div.appendChild(instruction);
+                if (q.type === "dragdrop") {
+                    renderDragDropQuestion(div, q, i);
+                } else {
+                    renderChoiceQuestion(div, q, i);
                 }
-
-                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
-
-                shuffledOptions.forEach(opt => {
-                    const label = document.createElement("label");
-
-                    const input = document.createElement("input");
-                    input.type = multi ? "checkbox" : "radio";
-                    input.name = "q-" + i;
-                    input.value = opt;
-
-                    input.addEventListener("change", () => {
-                        if (isPaused || examSubmitted) {
-                            input.checked = !input.checked;
-                            return;
-                        }
-
-                        if (multi) {
-                            if (!answers[i]) answers[i] = [];
-
-                            if (input.checked) {
-                                if (!answers[i].includes(opt)) {
-                                    answers[i].push(opt);
-                                }
-                            } else {
-                                answers[i] = answers[i].filter(a => a !== opt);
-                            }
-                        } else {
-                            answers[i] = opt;
-                        }
-                    });
-
-                    label.appendChild(input);
-                    label.appendChild(document.createTextNode(opt));
-                    div.appendChild(label);
-                });
 
                 examDiv.appendChild(div);
             });
+        }
+
+        function renderQuestionHeader(div, q, i) {
+            const p = document.createElement("p");
+            p.className = "question-text";
+            p.innerText = (i + 1) + ". " + q.question;
+            div.appendChild(p);
+        }
+
+        function renderChoiceQuestion(div, q, i) {
+            renderQuestionHeader(div, q, i);
+
+            const multi = Array.isArray(q.correctAnswer);
+
+            if (multi) {
+                const instruction = document.createElement("div");
+                instruction.className = "question-instruction";
+                instruction.innerText = `Choose ${q.correctAnswer.length} options`;
+                div.appendChild(instruction);
+            }
+
+            const shuffledOptions = shuffleArray(q.options || []);
+
+            shuffledOptions.forEach(opt => {
+                const label = document.createElement("label");
+
+                const input = document.createElement("input");
+                input.type = multi ? "checkbox" : "radio";
+                input.name = "q-" + i;
+                input.value = opt;
+
+                input.addEventListener("change", () => {
+                    if (isPaused || examSubmitted) {
+                        input.checked = !input.checked;
+                        return;
+                    }
+
+                    if (multi) {
+                        if (!answers[i]) answers[i] = [];
+
+                        if (input.checked) {
+                            if (!answers[i].includes(opt)) {
+                                answers[i].push(opt);
+                            }
+                        } else {
+                            answers[i] = answers[i].filter(a => a !== opt);
+                        }
+                    } else {
+                        answers[i] = opt;
+                    }
+                });
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(opt));
+                div.appendChild(label);
+            });
+        }
+
+        function renderDragDropQuestion(div, q, i) {
+            renderQuestionHeader(div, q, i);
+
+            const instruction = document.createElement("div");
+            instruction.className = "question-instruction";
+            instruction.innerText = `Match all ${q.targets.length} items`;
+            div.appendChild(instruction);
+
+            if (!answers[i] || typeof answers[i] !== "object" || Array.isArray(answers[i])) {
+                answers[i] = {};
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "dragdrop-wrapper";
+
+            const bankColumn = document.createElement("div");
+            const bankTitle = document.createElement("div");
+            bankTitle.className = "dragdrop-bank-title";
+            bankTitle.innerText = "Options";
+            bankColumn.appendChild(bankTitle);
+
+            const bank = document.createElement("div");
+            bank.className = "dragdrop-bank";
+            bankColumn.appendChild(bank);
+
+            const answerColumn = document.createElement("div");
+            const answerTitle = document.createElement("div");
+            answerTitle.className = "dragdrop-answer-title";
+            answerTitle.innerText = "Answer Area";
+            answerColumn.appendChild(answerTitle);
+
+            const dropArea = document.createElement("div");
+            dropArea.className = "drop-area";
+            answerColumn.appendChild(dropArea);
+
+            const assignedChoiceIds = Object.values(answers[i]).filter(Boolean);
+            const unassignedChoices = shuffleArray((q.choices || []).filter(choice => !assignedChoiceIds.includes(choice.id)));
+
+            unassignedChoices.forEach(choice => {
+                const item = document.createElement("div");
+                item.className = "drag-item";
+                item.innerText = choice.label;
+                item.dataset.choiceId = choice.id;
+                item.draggable = !examSubmitted;
+
+                item.addEventListener("dragstart", e => {
+                    if (isPaused || examSubmitted) {
+                        e.preventDefault();
+                        return;
+                    }
+                    e.dataTransfer.setData("text/plain", choice.id);
+                });
+
+                bank.appendChild(item);
+            });
+
+            (q.targets || []).forEach(target => {
+                const row = document.createElement("div");
+                row.className = "drop-row";
+
+                const dropZone = document.createElement("div");
+                dropZone.className = "drop-zone";
+                dropZone.dataset.targetId = target.id;
+
+                const dropText = document.createElement("div");
+                dropText.className = "drop-zone-text";
+
+                const assignedChoiceId = answers[i][target.id];
+                const assignedChoiceLabel = getChoiceLabelById(q.choices, assignedChoiceId);
+
+                if (assignedChoiceId) {
+                    dropZone.classList.add("filled");
+                    dropText.innerText = assignedChoiceLabel;
+                } else {
+                    dropText.innerText = "Drop here";
+                }
+
+                dropZone.appendChild(dropText);
+
+                if (assignedChoiceId && !examSubmitted) {
+                    const clearBtn = document.createElement("button");
+                    clearBtn.type = "button";
+                    clearBtn.className = "clear-drop-btn";
+                    clearBtn.innerText = "Clear";
+
+                    clearBtn.addEventListener("click", () => {
+                        if (isPaused || examSubmitted) return;
+                        delete answers[i][target.id];
+                        rerenderSingleQuestion(i);
+                    });
+
+                    dropZone.appendChild(clearBtn);
+                }
+
+                if (!examSubmitted) {
+                    dropZone.addEventListener("dragover", e => {
+                        if (isPaused || examSubmitted) return;
+                        e.preventDefault();
+                        dropZone.classList.add("drag-over");
+                    });
+
+                    dropZone.addEventListener("dragleave", () => {
+                        dropZone.classList.remove("drag-over");
+                    });
+
+                    dropZone.addEventListener("drop", e => {
+                        if (isPaused || examSubmitted) return;
+                        e.preventDefault();
+                        dropZone.classList.remove("drag-over");
+
+                        const choiceId = e.dataTransfer.getData("text/plain");
+                        if (!choiceId) return;
+
+                        // remove choice from any previous target
+                        Object.keys(answers[i]).forEach(targetKey => {
+                            if (answers[i][targetKey] === choiceId) {
+                                delete answers[i][targetKey];
+                            }
+                        });
+
+                        answers[i][target.id] = choiceId;
+                        rerenderSingleQuestion(i);
+                    });
+                }
+
+                const desc = document.createElement("div");
+                desc.className = "drop-description";
+                desc.innerText = target.text;
+
+                row.appendChild(dropZone);
+                row.appendChild(desc);
+
+                if (examSubmitted) {
+                    const correctChoiceId = q.correctAnswer[target.id];
+                    const zoneAssigned = answers[i][target.id];
+                    const isCorrect = zoneAssigned === correctChoiceId;
+
+                    if (isCorrect) {
+                        dropZone.classList.add("correct-answer");
+                    } else {
+                        dropZone.classList.add("wrong-answer");
+
+                        const hint = document.createElement("div");
+                        hint.className = "correct-hint";
+                        hint.innerText = `Correct: ${getChoiceLabelById(q.choices, correctChoiceId)}`;
+                        desc.appendChild(hint);
+                    }
+                }
+
+                dropArea.appendChild(row);
+            });
+
+            wrapper.appendChild(bankColumn);
+            wrapper.appendChild(answerColumn);
+            div.appendChild(wrapper);
+        }
+
+        function rerenderSingleQuestion(index) {
+            const questionDiv = document.querySelector(`.question[data-question-index="${index}"]`);
+            if (!questionDiv) return;
+
+            questionDiv.innerHTML = "";
+
+            const q = questions[index];
+            if (q.type === "dragdrop") {
+                renderDragDropQuestion(questionDiv, q, index);
+            } else {
+                renderChoiceQuestion(questionDiv, q, index);
+            }
+        }
+
+        function getChoiceLabelById(choices, id) {
+            const match = (choices || []).find(choice => choice.id === id);
+            return match ? match.label : "";
         }
 
         function isAnswerCorrect(userAnswer, correctAnswer) {
@@ -210,15 +533,31 @@
             return userAnswer === correctAnswer;
         }
 
+        function isDragDropCorrect(userAnswer, correctAnswer) {
+            if (!userAnswer || typeof userAnswer !== "object") return false;
+
+            const targetIds = Object.keys(correctAnswer || {});
+            return targetIds.every(targetId => userAnswer[targetId] === correctAnswer[targetId]);
+        }
+
+        function isQuestionAnswered(q, userAnswer) {
+            if (q.type === "dragdrop") {
+                if (!userAnswer || typeof userAnswer !== "object") return false;
+                return (q.targets || []).every(target => !!userAnswer[target.id]);
+            }
+
+            if (Array.isArray(q.correctAnswer)) {
+                return Array.isArray(userAnswer) && userAnswer.length > 0;
+            }
+
+            return userAnswer !== undefined;
+        }
+
         function submitExam() {
             if (examSubmitted) return;
 
-            const unanswered = questions.some((q, i) => {
-                return answers[i] === undefined ||
-                    (Array.isArray(q.correctAnswer) && (!answers[i] || answers[i].length === 0));
-            });
+            const unanswered = questions.some((q, i) => !isQuestionAnswered(q, answers[i]));
 
-            // ✅ Confirm popup with 2 choices
             if (unanswered) {
                 const proceed = confirm(
                     "You have unanswered questions.\n\nPress OK to submit anyway.\nPress Cancel to complete the exam."
@@ -237,13 +576,34 @@
 
             questions.forEach((q, i) => {
                 const questionDiv = questionDivs[i];
-                const labels = questionDiv.querySelectorAll("label");
                 const userAnswer = answers[i];
                 const correctAnswer = q.correctAnswer;
 
-                const questionIsCorrect = isAnswerCorrect(userAnswer, correctAnswer);
+                let questionIsCorrect = false;
 
-                // ✅ Restore question coloring
+                if (q.type === "dragdrop") {
+                    questionIsCorrect = isDragDropCorrect(userAnswer, correctAnswer);
+                } else {
+                    const labels = questionDiv.querySelectorAll("label");
+                    questionIsCorrect = isAnswerCorrect(userAnswer, correctAnswer);
+
+                    labels.forEach(label => {
+                        const input = label.querySelector("input");
+                        const value = input.value;
+                        input.disabled = true;
+
+                        const isCorrectOption = Array.isArray(correctAnswer)
+                            ? correctAnswer.includes(value)
+                            : correctAnswer === value;
+
+                        if (isCorrectOption) {
+                            label.classList.add("correct-answer");
+                        } else if (input.checked) {
+                            label.classList.add("wrong-answer");
+                        }
+                    });
+                }
+
                 if (questionIsCorrect) {
                     correct++;
                     questionDiv.classList.add("correct");
@@ -251,23 +611,15 @@
                     questionDiv.classList.add("wrong");
                 }
 
-                labels.forEach(label => {
-                    const input = label.querySelector("input");
-                    const value = input.value;
-
-                    input.disabled = true;
-
-                    const isCorrectOption = Array.isArray(correctAnswer)
-                        ? correctAnswer.includes(value)
-                        : correctAnswer === value;
-
-                    // ✅ Restore answer coloring
-                    if (isCorrectOption) {
-                        label.classList.add("correct-answer");
-                    } else if (input.checked) {
-                        label.classList.add("wrong-answer");
+                if (q.type === "dragdrop") {
+                    rerenderSingleQuestion(i);
+                    const renderedQuestionDiv = document.querySelector(`.question[data-question-index="${i}"]`);
+                    if (questionIsCorrect) {
+                        renderedQuestionDiv.classList.add("correct");
+                    } else {
+                        renderedQuestionDiv.classList.add("wrong");
                     }
-                });
+                }
             });
 
             const percentage = (correct / questions.length) * 100;

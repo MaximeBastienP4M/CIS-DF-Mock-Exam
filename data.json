@@ -1113,6 +1113,598 @@
         "personalize_dictionary",
         "sn_cmdb_admin"
       ]
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag and drop the CMDB Health metric to the correct description.",
+      "choices": [
+        {
+          "id": "audit",
+          "label": "Audit"
+        },
+        {
+          "id": "duplicate",
+          "label": "Duplicate"
+        },
+        {
+          "id": "orphan",
+          "label": "Orphan"
+        },
+        {
+          "id": "recommended",
+          "label": "Recommended"
+        },
+        {
+          "id": "required",
+          "label": "Required"
+        },
+        {
+          "id": "stale",
+          "label": "Stale"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "CMDB records that represent the same physical or logical asset multiple times"
+        },
+        {
+          "id": "t2",
+          "text": "Fields necessary to create or update a CI record in the CMDB"
+        },
+        {
+          "id": "t3",
+          "text": "CMDB records that no longer maintain their logical or physical relationships with other CIs"
+        },
+        {
+          "id": "t4",
+          "text": "CMDB records that are no longer actively updated, but remain stored in the database"
+        },
+        {
+          "id": "t5",
+          "text": "Fields that support the accuracy, completeness, and usability of CI records in the CMDB"
+        },
+        {
+          "id": "t6",
+          "text": "Actual values of specified fields are compared to the expected values defined in a template"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "duplicate",
+        "t2": "required",
+        "t3": "orphan",
+        "t4": "stale",
+        "t5": "recommended",
+        "t6": "audit"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "ServiceNow provides a suite of CMDB management tools designed to effectively ingest, manage, and maintain CIs and relationships. \n\nDrag and drop the CMDB Health metric to the correct description.",
+      "choices": [
+        {
+          "id": "organization-build solution using transform maps",
+          "label": "Organization-build solution using transform maps"
+        },
+        {
+          "id": "automated agent-based solution running patterns",
+          "label": "Automated agent-based solution running patterns"
+        },
+        {
+          "id": "automated agentless solution running patterns",
+          "label": "Automated agentless solution running patterns"
+        },
+        {
+          "id": "third-party integrations from other vendors",
+          "label": "Third-party integrations from other vendors"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Agent Client Collector"
+        },
+        {
+          "id": "t2",
+          "text": "Import Sets"
+        },
+        {
+          "id": "t3",
+          "text": "Service Graph Connector"
+        },
+        {
+          "id": "t4",
+          "text": "ServiceNow Discovery"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "automated agent-based solution running patterns",
+        "t2": "organization-build solution using transform maps",
+        "t3": "third-party integrations from other vendors",
+        "t4": "automated agentless solution running patterns"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag and drop each feature with the corresponding outcome.",
+      "choices": [
+        {
+          "id": "certification",
+          "label": "Certification Tasks"
+        },
+        {
+          "id": "dashboard",
+          "label": "CMDB Health Dashboard Correctness Scorecard"
+        },
+        {
+          "id": "tasks",
+          "label": "De-Duplication Tasks"
+        },
+        {
+          "id": "templates",
+          "label": "De-Duplication Templates"
+        },
+        {
+          "id": "remediator",
+          "label": "Duplicate CI Remediator"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Can be assigned to groups for resolving duplicate CIs"
+        },
+        {
+          "id": "t2",
+          "text": "Offers insight into duplicate CIs within the CMDB"
+        },
+        {
+          "id": "t3",
+          "text": "Offers a solution to resolve de-duplication tasks in bulk"
+        },
+        {
+          "id": "t4",
+          "text": "Provides a wizard to resolve de-duplication tasks individually"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "tasks",
+        "t2": "dashboard",
+        "t3": "templates",
+        "t4": "remediator"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Given a list of Service types in the platform, drag the appropriate service to its definition.",
+      "choices": [
+        {
+          "id": "application",
+          "label": "Application Service"
+        },
+        {
+          "id": "business",
+          "label": "Business Service"
+        },
+        {
+          "id": "technical",
+          "label": "Technology Management Service (Technical Service)"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Logical representation of a deploy system or application stack."
+        },
+        {
+          "id": "t2",
+          "text": "Published to Service Owners and underpins one or more business or application services."
+        },
+        {
+          "id": "t3",
+          "text": "Published to Business Users and underpins one or more business capabilities."
+        }
+      ],
+      "correctAnswer": {
+        "t1": "application",
+        "t2": "technical",
+        "t3": "business"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag and drop the application service type to the best description.",
+      "choices": [
+        {
+          "id": "dynamic",
+          "label": "Dynamic CI Group"
+        },
+        {
+          "id": "suggestion",
+          "label": "Service Mapping (Connection Suggestion)"
+        },
+        {
+          "id": "topdown",
+          "label": "Service Mapping (Top-down)"
+        },
+        {
+          "id": "tagbased",
+          "label": "Tag-Based"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Recommended for mission-critical applications requiring a precise approach using patterns."
+        },
+        {
+          "id": "t2",
+          "text": "Best fit to map cloud-native, container-based, or machine environments."
+        },
+        {
+          "id": "t3",
+          "text": "Ideal for custom-built applications and leverages fingerprinting."
+        },
+        {
+          "id": "t4",
+          "text": "Ideal for small application services using filters and CMDB queries."
+        }
+      ],
+      "correctAnswer": {
+        "t1": "topdown",
+        "t2": "suggestion",
+        "t3": "tagbased",
+        "t4": "dynamic"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag the CMDB objects to the correct CSDM domains.",
+      "choices": [
+        {
+          "id": "app",
+          "label": "Application Service"
+        },
+        {
+          "id": "bizapp",
+          "label": "Business Application"
+        },
+        {
+          "id": "process",
+          "label": "Business Process"
+        },
+        {
+          "id": "service",
+          "label": "Business Service"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Design and Planning domain"
+        },
+        {
+          "id": "t2",
+          "text": "Foundation domain"
+        },
+        {
+          "id": "t3",
+          "text": "Service Delivery domain"
+        },
+        {
+          "id": "t4",
+          "text": "Sell / Consume domain"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "bizapp",
+        "t2": "process",
+        "t3": "app",
+        "t4": "service"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag each ServiceNow product to the value it brings to supporting Incident Management.",
+      "choices": [
+        {
+          "id": "discovery",
+          "label": "Discovery"
+        },
+        {
+          "id": "ham",
+          "label": "Hardware Asset Management"
+        },
+        {
+          "id": "risk",
+          "label": "Risk Management"
+        },
+        {
+          "id": "spm",
+          "label": "Service Portfolio Management"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Delivers asset actions and events for management of assets during incidents."
+        },
+        {
+          "id": "t2",
+          "text": "Supplies critical IT and financial risk data."
+        },
+        {
+          "id": "t3",
+          "text": "Offers detailed operational-level data on hardware and applications."
+        },
+        {
+          "id": "t4",
+          "text": "Provides lifecycle information about services."
+        }
+      ],
+      "correctAnswer": {
+        "t1": "ham",
+        "t2": "risk",
+        "t3": "discovery",
+        "t4": "spm"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag and drop the CMDB Health Dashboard metric to the description.",
+      "choices": [
+        {
+          "id": "audit",
+          "label": "Audits"
+        },
+        {
+          "id": "duplicate",
+          "label": "Duplicate CIs"
+        },
+        {
+          "id": "orphan",
+          "label": "Orphan CIs"
+        },
+        {
+          "id": "recommended",
+          "label": "Recommended fields"
+        },
+        {
+          "id": "required",
+          "label": "Required fields"
+        },
+        {
+          "id": "stale",
+          "label": "Stale CIs"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Use these to compare actual values with expected values"
+        },
+        {
+          "id": "t2",
+          "text": "Use of these should be minimized"
+        },
+        {
+          "id": "t3",
+          "text": "Certain attributes are missing or relationships absent"
+        },
+        {
+          "id": "t4",
+          "text": "Preferable for them to be populated"
+        },
+        {
+          "id": "t5",
+          "text": "Have not been updated and may be outdated"
+        },
+        {
+          "id": "t6",
+          "text": "Detected during identification and reconciliation"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "audit",
+        "t2": "orphan",
+        "t3": "required",
+        "t4": "recommended",
+        "t5": "stale",
+        "t6": "duplicate"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Some steps need to be taken to transition from using different status attributes in the CMDB to life cycle objects.\nDrag and drop the objects/attributes to the description.",
+      "choices": [
+        {
+          "id": "stage_status",
+          "label": "life_cycle_stage_status"
+        },
+        {
+          "id": "object",
+          "label": "life_cycle_object"
+        },
+        {
+          "id": "mapping",
+          "label": "life_cycle_mapping"
+        },
+        {
+          "id": "stage",
+          "label": "life_cycle_stage"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "This table is pre-populated with mappings for legacy status values, based on its table, to the best-fit CSDM life-cycle value pair."
+        },
+        {
+          "id": "t2",
+          "text": "This is a record attribute that reflects a meta-level state of the record life cycle."
+        },
+        {
+          "id": "t3",
+          "text": "This is a record attribute that reflects a sub-level state of the record life cycle."
+        },
+        {
+          "id": "t4",
+          "text": "This table uses the type of CI (hardware, document, logical, etc.) to determine which sub-level life cycle state values are available."
+        }
+      ],
+      "correctAnswer": {
+        "t1": "mapping",
+        "t2": "stage",
+        "t3": "stage_status",
+        "t4": "object"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "A CMDB Administrator needs to set up CMDB 360/Multisource CMDB.\n\nDrag and drop the system property to the functionality.",
+      "choices": [
+        {
+          "id": "logging",
+          "label": "Enables logging for CMDB 360"
+        },
+        {
+          "id": "non_cmdb",
+          "label": "Enables capturing CMDB 360 data for CIs from non-CMDB classes"
+        },
+        {
+          "id": "enable",
+          "label": "Enables CMDB 360"
+        },
+        {
+          "id": "cmdb_classes",
+          "label": "Enables capturing CMDB 360 data for CIs from CMDB classes"
+        },
+        {
+          "id": "limit",
+          "label": "Maximum number of CIs that can be included in a CMDB 360 recompute operation"
+        }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "glide.identification_engine.multisource_enabled"
+        },
+        {
+          "id": "t2",
+          "text": "glide.identification_engine.multisource_cmdb_ci_enabled"
+        },
+        {
+          "id": "t3",
+          "text": "glide.cmdb.logger.source.cmdb_multisource"
+        },
+        {
+          "id": "t4",
+          "text": "glide.identification_engine.multisource.recompute.max_ci.limit"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "enable",
+        "t2": "cmdb_classes",
+        "t3": "logging",
+        "t4": "limit"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "Drag and drop the product to its description.",
+      "choices": [
+        { "id": "acc", "label": "Agent Client Collector (ACC)" },
+        { "id": "discovery", "label": "ServiceNow Discovery" },
+        { "id": "sgc", "label": "Service Graph Connectors" },
+        { "id": "mapping", "label": "Service Mapping" }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Automatically identifies devices and applications in the network, populating the CMDB with accurate and up-to-date information"
+        },
+        {
+          "id": "t2",
+          "text": "Facilitates integration between ServiceNow and external systems to import and synchronize data"
+        },
+        {
+          "id": "t3",
+          "text": "Complete topology of the services and shows how they are supported by underlying infrastructure and applications"
+        },
+        {
+          "id": "t4",
+          "text": "Provides real-time visibility into endpoint configurations, populating the CMDB with accurate and up-to-date information"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "discovery",
+        "t2": "sgc",
+        "t3": "mapping",
+        "t4": "acc"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "A Platform Owner is building the governance team to support the CSDM.\n\nDrag the domain to the roles that make up the governance team.",
+      "choices": [
+        { "id": "design", "label": "Design Domain" },
+        { "id": "foundation", "label": "Foundation Domain" },
+        { "id": "portfolio", "label": "Portfolio Domain" },
+        { "id": "technical", "label": "Technical Domain" }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Service Owner(s), Platform Owner"
+        },
+        {
+          "id": "t2",
+          "text": "Technology Service Owner(s), Application Service Owner(s), Platform Owner"
+        },
+        {
+          "id": "t3",
+          "text": "Enterprise Architect(s), Platform Owner"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "foundation",
+        "t2": "portfolio",
+        "t3": "design"
+      }
+    },
+    {
+      "type": "dragdrop",
+      "question": "A Platform Owner is building the governance team to support the CSDM.\n\nDrag the domain to the roles that make up the governance team.",
+      "choices": [
+        { "id": "design", "label": "Design Domain" },
+        { "id": "foundation", "label": "Foundation Domain" },
+        { "id": "portfolio", "label": "Portfolio Domain" },
+        { "id": "technical", "label": "Technical Domain" }
+      ],
+      "targets": [
+        {
+          "id": "t1",
+          "text": "Service Owner(s), Platform Owner"
+        },
+        {
+          "id": "t2",
+          "text": "Technology Service Owner(s), Application Service Owner(s), Platform Owner"
+        },
+        {
+          "id": "t3",
+          "text": "Enterprise Architect(s), Platform Owner"
+        },
+        {
+          "id": "t4",
+          "text": "Enterprise Architect(s), Data Steward(s), Process Owner(s), Platform Owner"
+        }
+      ],
+      "correctAnswer": {
+        "t1": "foundation",
+        "t2": "portfolio",
+        "t3": "design",
+        "t4": "technical"
+      }
     }
   ]
 }
